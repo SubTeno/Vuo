@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+  <body>
+    <!-- TOP (NAVIGATION BAR) -->
+    <ul class="nav nav-tabs" th:fragment="top (path)">
+      <li class="nav-item">
+        <a th:class="'nav-link' + ${path == '/' ? ' active' : ''}" href="/"
+          >Home</a
+        >
+      </li>
+      <li class="nav-item dropdown">
+        <a
+          sec:authorize="hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')"
+          class="nav-link dropdown-toggle"
+          data-bs-toggle="dropdown"
+          href="#"
+          role="button"
+          aria-expanded="false"
+          >Administration</a
+        >
+        <ul class="dropdown-menu">
+          <li class="nav-item">
+            <a
+              th:class="'nav-link' + ${path == '/add' ? ' active' : ''}"
+              href="/add"
+              >Add/Update user</a
+            >
+          </li>
+          <li sec:authorize="hasAnyRole('ROLE_ADMIN')" class="nav-item">
+            <a
+              th:class="'nav-link ' + ${path == '/assignrole' ? ' active' : ''}"
+              href="/assignrole"
+              >Assign Role</a
+            >
+          </li>
+        </ul>
+      </li>
+      <li class="nav-item">
+        <a
+          th:class="'nav-link ' + ${path == '/additem' ? ' active' : ''}"
+          href="/additem"
+          >Add Item</a
+        >
+      </li>
+    </ul>
+    <!-- ADD USER -->
+    <form th:fragment="add" method="post" th:action="@{/api/get}">
+      <div class="row g-3 justify-content-end">
+        <div class="col-auto">
+          <label for="username" class="form-label">Search</label>
+          <input
+            placeholder="Username"
+            type="text"
+            name="username"
+            class="form-control"
+          />
+        </div>
+      </div>
+    </form>
+
+    <form th:fragment="add" method="post" th:action="@{/api/add}">
+      <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input
+          type="text"
+          th:value="${user.name}"
+          class="form-control"
+          name="name"
+        />
+        <a th:errors="${user.name}" />
+      </div>
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input
+          type="text"
+          th:value="${user.username}"
+          class="form-control"
+          name="username"
+        />
+        <a th:errors="${user.username}" />
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input
+          type="password"
+          th:value="${user.password}"
+          class="form-control"
+          name="password"
+        />
+        <a th:errors="${user.password}" />
+      </div>
+      <button type="submit" class="btn btn-primary">Add / Update</button>
+      <button
+        type="submit"
+        class="btn btn-danger"
+        th:formaction="@{/api/delete}"
+      >
+        Delete
+      </button>
+    </form>
+
+    <!-- GET -->
+    <form
+      th:fragment="get"
+      th:object="${id}"
+      method="post"
+      th:action="@{/api/get}"
+    >
+      <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" class="form-control" name="id" />
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    <!-- ASSIGN ROLE -->
+
+    <form th:fragment="assignrole" method="post" th:action="@{/api/assignrole}">
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" class="form-control" name="username" />
+      </div>
+      <div class="mb-3">
+        <label for="role" class="form-label">Role</label>
+        <select class="form-select" name="role">
+          <option value="ROLE_USER">User</option>
+          <option value="ROLE_MANAGER">Manager</option>
+          <option value="ROLE_ADMIN">Admin</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    <!-- ADD ITEM ! TO DO ! -->
+    <form th:fragment="additem" method="post" th:action="@{/getitem}">
+      <div class="row g-3 justify-content-end">
+        <div class="col-auto">
+          <label for="username" class="form-label">Search</label>
+          <input
+            placeholder="Item Name"
+            type="text"
+            name="itemName"
+            class="form-control"
+          />
+        </div>
+      </div>
+    </form>
+    <form
+      th:fragment="additem"
+      method="post"
+      th:action="@{/api/additem}"
+      enctype="multipart/form-data"
+    >
+      <div class="mb-3">
+        <label for="name" class="form-label">Item Name</label>
+        <input
+          type="text"
+          th:value="${item.name}"
+          class="form-control"
+          name="name"
+        />
+        <a th:errors="${item.name}" />
+      </div>
+      <div class="mb-3">
+        <label for="price" class="form-label">Price</label>
+        <input
+          type="number"
+          th:value="${item.price}"
+          class="form-control"
+          name="price"
+        />
+        <a th:errors="${item.price}" />
+      </div>
+      <div class="mb-3">
+        <label for="file" class="form-label">Max Size : 1 MB</label>
+        <input
+          type="file"
+          class="form-control"
+          name="file"
+          accept=".jpg, .png"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea
+          class="form-control"
+          th:utext="${item.description}"
+          name="description"
+          rows="3"
+        />
+        <a th:errors="${item.description}" />
+      </div>
+      <button type="submit" class="btn btn-primary">Add / Update</button>
+      <button
+        type="submit"
+        class="btn btn-danger"
+        th:formaction="@{/deleteitem}"
+      >
+        Delete
+      </button>
+    </form>
+
+    <!-- WELCOME SIGN -->
+    <p
+      style="text-align: center"
+      class="alert alert-success"
+      th:fragment="welcome"
+      th:if="${#request.ServletPath != null && #request.ServletPath == '/'}"
+      th:utext="'Welcome ' + ${#authentication.principal.name}"
+    />
+
+    <!-- BOTTOM -->
+    <div th:fragment="bottom" class="footer">
+      <a href="/logout">Logout</a>
+      &copy; 2022 Subteno
+    </div>
+  </body>
+</html>

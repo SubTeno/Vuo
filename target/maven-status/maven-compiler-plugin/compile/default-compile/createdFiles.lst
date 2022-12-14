@@ -1,0 +1,14 @@
+com\subteno\vuo\Controller\VuoController.class
+com\subteno\vuo\Model\Role.class
+com\subteno\vuo\Interface\ItemInterfaceService.class
+com\subteno\vuo\Model\User.class
+com\subteno\vuo\VuoApplication.class
+com\subteno\vuo\Config\FirestoreConfiguration.class
+com\subteno\vuo\Services\CustomUserDetailsService.class
+com\subteno\vuo\Model\Item.class
+com\subteno\vuo\Model\Result.class
+com\subteno\vuo\Config\SecurityConfiguration.class
+com\subteno\vuo\Services\UserServices.class
+com\subteno\vuo\Model\CustomUserDetails.class
+com\subteno\vuo\Services\ItemServices.class
+com\subteno\vuo\Interface\UserInterfaceServices.class
